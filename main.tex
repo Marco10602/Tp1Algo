@@ -13,7 +13,7 @@
 \grupo{Grupo puntoJava}
 
 \integrante{Gremes, Juan Ignacio}{21/24}{juanigremes@gmail.com}
-\integrante{Anllo, Franciasco}{002/01}{email2@dominio.com}
+\integrante{Anllo, Francisco}{209/24}{anllo.francisco@gmail.com}
 \integrante{Naddeo, Matias}{003/01}{email3@dominio.com}
 \integrante{Gutierrez, Marco}{167/24}{marcoantonio-gutierrez02@hotmail.com}
 
@@ -97,7 +97,15 @@ En caso de no existir un camino, se debe devolver una lista vacía.
 
 %                                            EJERCICIO 2.1
 
+La función poblaciónTotal recibe una lista de ciudades donde al menos una de ellas es grande (es decir, supera los
+50.000 habitantes) y devuelve la cantidad total de habitantes. Dada la siguiente especificación:
 
+\begin{proc}{poblaciónTotal}{\In ciudades : \TLista{\str\times\ent}{\ent}
+	\requiere{\existe[unalinea]{i}{\ent}{(0 \leq i < |ciudades|) \yLuego (ciudadess[i].habitantes > 50.000) y 
+ 		  \paratodo{i}{\ent}{(0 \leq i < |ciudades|) \implicaLuego (ciudades[i].habitantes >= 0)} y
+  		  \paratodo{i}{\ent}\paratodo{j}{\ent}{(0 \leq i, leq j < |ciudades|) \implicaLuego (ciudades[i].nombre != ciudades[j].nombre}
+	\asegura{res = \sum_{i=0}^{|ciudades|-1} ciudades[i].habitantes}
+ \end{proc}
 %                                            EJERCICIO 2.2
 
 
