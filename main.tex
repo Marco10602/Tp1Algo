@@ -109,10 +109,142 @@ En caso de no existir un camino, se debe devolver una lista vacía.
 
 %                                            EJERCICIO 2.1
 
+La función poblaciónTotal recibe una lista de ciudades donde al menos una de ellas es grande (es decir, supera los 50.000 habitantes) y devuelve la cantidad total de habitantes. Dada la siguiente especificación:
 
+\begin{proc}{poblaciónTotal}{\In ciudades : \TLista{\str\times\ent}}{\ent}
+    \requiere{\existe[unalinea]{i}{\ent}{(0 \leq i < |ciudades|) \yLuego (ciudades[i].habitantes > 50.000)} \wedge \\ 
+    \paraTodo[unalinea]{i}{\ent}{(0 \leq i < |ciudades|) \implicaLuego (ciudades[i].habitantes \geq 0)} \wedge \\
+    \paraTodo[unalinea]{i, j}{\ent} {(0 \leq i < j < |ciudades|) \implicaLuego (ciudades[i].nombre \neq ciudades[j].nombre)}}
+    \asegura{res = \sum\limits_{i=0}^{|ciudades| - 1}ciudades[i].habitantes}
+\end{proc}
+Con la siguiente implementación:\\
+
+res = 0\\
+i = 0\\
+while ( i $<$ ciudades.length) do\\
+res = res + ciudades[i].habitantes\\
+i = i + 1\\
+endwhile\\
+
+\textbf{1. Demostrar que la implementación es correcta con respecto a la especificación.}\\
+
+Para poder asegurar que la implementación es correcta, debemos probar que se cumple la tripla de Hoare [P] S [Q]. Es decir, P $\implicaLuego$ wp(S,Q). En primer lugar, intentaremos identificar esta precondición P y post condición Q.
+La post condición Q es el estado que buscaremos que el programa se encuentre una vez que finalice. De acuerdo a la especificación, es posible concluir que:
+\textbf{{Q = ${\sum\limits_{i=0}^{|ciudades| - 1}ciudades[i].habitantes}$}}
+
+Como el programa termina en el ciclo "while", es válido afirmar que la post condición del programa será la misma que la del ciclo. En otras palabras, \textbf{Q = Qc}. Es imperativo, entonces, comprobar la correctitud del ciclo, y para ello utilizaremos el Teorema del Invariante y el Teorema de Terminación.
+Veamos, en primer lugar, cuál es la precondición del ciclo. Sabemos que esta será la precondición del programa, más cualquier instrucción hasta llegar al comienzo del ciclo. Entonces, podemos decir que, como P es todas las condiciones establecidas en los \textit{requiere}, entonces Pc lo será también, sumadas las dos instrucciones antes de llegar al ciclo. Por lo tanto, \textbf{Pc = P $\wedge$ i = 0 $\wedge$ res = 0}\\
+    Proponemos, entonces, el siguiente invariante: \textbf{I = $0 \leq i \leq |ciudades| \yLuego res = \sum\limits_{j=0}^{i - 1}ciudades[j].habitantes$}. Veamos ahora si cumple las tres condiciones necesarias: \\
+    
+    1) Pc $\implica$ I: \\
+    
+        Pc $\implica$ (i = 0 $\wedge$ res = 0) $\implica$ 0 $\leq$ 0 $\leq |ciudades| \wedge  res = \sum\limits_{j=0}^{0 - 1}ciudades[j].habitantes$ \\
+        Como la sumatoria se encuentra fuera de rango, el total es igual a 0. Se cumple, entonces, que res = 0. Verificamos que esta condición es verdadera; veamos las otras dos.\\
+        
+    2) I $\wedge$  $\neg$B $\implica$ Qc  \\
+    
+    Llamamos B a la guarda del "while". En este caso, la guarda es $ i < ciudades.length$, por lo que la negación de B sería $i \geq |ciudades|$. Ahora que tenemos bien definido todo, veamos si esto se cumple: \\
+    I $\wedge$  $\neg$B = ($0 \leq i \leq |ciudades| \yLuego res = \sum\limits_{j=0}^{i - 1}ciudades[j].habitantes \wedge i \geq |ciudades|)$ \\
+    Si condensamos estas condiciones, es claro que... \\
+    I $\wedge$  $\neg$B $\implica$$ (i = |ciudades| \wedge res = \sum\limits_{j=0}^{i - 1}ciudades[j].habitantes) \implica res = \sum\limits_{j=0}^{|ciudades| - 1}ciudades[j].habitantes$\\
+    ¡Que es exactamente lo que establece Qc! Veamos la última condición.\\
+
+    3) [I $\wedge$ B] S [I]\\
+
+    Tengo que probar que {($0 \leq i \leq |ciudades| \yLuego res = \sum\limits_{j=0}^{i - 1}ciudades[j].habitantes \wedge i < |ciudades|)  \implicaLuego$ wp(S,I)} \\Condensado, esto es lo mismo que decir ($0 \leq i < |ciudades| \yLuego res = \sum\limits_{j=0}^{i - 1}ciudades[j].habitantes) \implicaLuego$ wp(S, I)\\
+    
+        Para esto, llamaremos S1 a la primera instrucción dentro del ciclo, y S2 a la segunda. Por lo tanto, \textbf{S1 = (res = res + ciudades[i].habitantes)} y \textbf{S2 = (i = i + 1)}\\
+        
+    wp(S, I) = wp(S1, wp(S2, I)) = wp(res = res + ciudades[i].habitantes, wp(S2, I))\\
+    
+    wp(S2, I) = (i := i + 1, $0 \leq i \leq |ciudades| \yLuego res = \sum\limits_{j=0}^{i - 1}ciudades[j].habitantes$ \\
+
+    Utilizando el Axioma 1 (Asignación), reemplazaremos el valor de \textit{i} en cada una de sus apariciones libres, que en este caso, son todas: \\
+    wp(S2, I) = def (i + 1) $\yLuego (0 \leq i+1 \leq |ciudades| \yLuego res = \sum\limits_{j=0}^{i + 1 - 1}ciudades[j].habitantes$)\\
+    Como i+1 no trae ninguna restricción, su definición es igual a \textit{True}. Nos queda, entonces...\\
+    
+    wp(S2, I) = $0 \leq i < |ciudades| \yLuego res = \sum\limits_{j=0}^{i}ciudades[j].habitantes$\\
+    
+    Retomando con lo anterior, obtenemos que:\\
+
+    wp(S, I) = wp(res = res + ciudades[i].habitantes, $0 \leq i < |ciudades| \yLuego res = \sum\limits_{j=0}^{i}ciudades[j].habitantes$)\\
+
+    Nuevamente, utilizaremos el Axioma 1. La expresion queda de la siguiente manera:\\
+    
+    def (res) $\yLuego$ def (ciudades[i]) $\yLuego$ res + ciudades[i].habitantes = $\sum\limits_{j=0}^{i}ciudades[j].habitantes$\\
+
+    Como res no tiene restricciones, esa definición es \textit{True }. Sin embargo, ciudades[\textit{i}] requiere que \textit{i} esté en rango de la lista. Por otro lado, podemos decir que $\sum\limits_{j=0}^{i}ciudades[j].habitantes = \sum\limits_{j=0}^{i-1}(ciudades[j].habitantes) + ciudades[i].habitantes$ Veamos cómo sigue:\\
+
+    $0 \leq i < |ciudades| \yLuego (res + ciudades[i].habitantes = \sum\limits_{j=0}^{i-1}(ciudades[j].habitantes) + ciudades[i].habitantes)$ \\
+    
+    Es decir que wp(S, I) = $0 \leq i < |ciudades| \yLuego res = \sum\limits_{j=0}^{i-1}ciudades[j].habitantes$\\
+
+    Recapitulando...\\
+
+    ($0 \leq i < |ciudades| \yLuego res = \sum\limits_{j=0}^{i - 1}ciudades[j].habitantes) \implicaLuego$ wp(S, I) es verdadero, porque son exactamente el mismo predicado. Por lo tanto, el ciclo es parcialmente correcto. Falta comprobar si siempre termina, que probaremos a través del Teorema de Terminación.\\
+    
+    Proponemos la Función Variante (fv) = $|ciudades| - i$. Veamos si cumple las condiciones:\\
+
+    1) I $\wedge$ fv $\leq 0  \implica \neg B$\\
+
+    $0 \leq i \leq |ciudades| \yLuego res = \sum\limits_{j=0}^{i - 1}ciudades[j].habitantes \wedge |ciudades| - i \leq 0 \implicaLuego i \geq |ciudades|$ \\
+    
+    $0 \leq i \leq |ciudades| \yLuego res = \sum\limits_{j=0}^{i - 1}ciudades[j].habitantes \wedge |ciudades| \leq i \implicaLuego i \geq |ciudades|$ \\
+
+    $i = |ciudades| \wedge  res = \sum\limits_{j=0}^{i - 1}ciudades[j].habitantes \implicaLuego i \geq |ciudades|$\\
+
+    Que es verdadero, ya que $i = |ciudades| \implica i \geq ciudades$. Veamos la siguiente condición.\\
+
+    2) [I $\wedge$ B $\wedge$ V0 = fv] S [fv $<$ V0]\\
+
+    $I \yLuego B \yLuego V0 = |ciudades| - i \implica$ wp(S, fv $<$ V0)\\
+    
+    Usando S, dividido en S1 y S2 como fue explicado anteriormente, podemos decir que:\\
+    
+    wp(S, fv $<$ V0) = wp(res = res + ciudades[i].habitantes, wp(S2, fv $<$ V0))\\
+
+    wp(S2, fv $<$ V0) = wp(i := i + 1, $|ciudades| - i < V0$) Usando el Axioma 1 obtenemos: $|ciudades| - i - 1 < V0$, ya que (i + 1) ya está definido.\\
+
+    wp(S, fv $<$ V0) = wp(res = res + ciudades[i].habitantes, $|ciudades| - i - 1 < V0$). Usando el axioma 1, obtenemos: $def (s[i]) \yLuego |ciudades| - i - 1 < V0$, porque \textit{res} ya está definido.\\
+
+    ($0\leq i \leq |ciudades| \yLuego |ciudades| - i - 1 < |ciudades| - i) \implica fv < V0$. Se cumple esta condición también, por lo que hemos comprobado, a través del Teorema del Invariante y del Teorema de Terminación, que el ciclo es correcto y siempre termina. Pero como hay dos instrucciones antes de que comience el ciclo, no hemos terminado. Veamos que, a través de esas dos instrucciones -que llamaremos T1 y T2, y T a su conjunto-, se cumple la tripla de Hoare [P] T [Pc]. \\
+
+    ¿P $\implicaLuego$ wp(T, Pc)? Calculamos wp(T, Pc):\\
+
+    wp(T, Pc) = wp(res := 0, wp(T2, Pc)) = wp(res := 0; i := 0, P $\wedge$ i = 0 $\wedge$ res = 0)\\ 
+    Usando dos veces el axioma 1, vemos que i = 0 y res = 0 son dos predicados \textit{True}, y por lo tanto Pc se reduce a:\\ (P $\wedge$ True $\wedge$ True). Entonces wp(T, Pc) = P, y es una tautología decir que P $\implica$ P.\\
+
+    Queda demostrado, entonces, que la implementación es correcta con respecto de la especificación.\\
+    
 %                                            EJERCICIO 2.2
 
+2. \textbf{Demostrar que el valor devuelto es mayor a 50.000.}\\
 
+Ya hemos probado que la implementación es correcta de acuerdo a la especificación. Es decir que P $\implica$ wp(S, Q), siendo Q: res = $\sum\limits_{i=0}^{|ciudades| - 1}ciudades[i].habitantes$. Ahora, queremos demostrar que, dada cualquier lista que cumpla P, res $>$ 50.000.
+Sabemos que $\existe[unalinea]{i}{\ent}{(0 \leq i < |ciudades|) \yLuego (ciudades[i].habitantes > 50.000)}$, por lo que analizaremos distintos casos de la lista \textit{ciudades} teniendo esto en cuenta:\\
+
+$|ciudades| = 0 \implica \neg \existe[unalinea]{i}{\ent}{(0 \leq i < 0) \yLuego (ciudades[i].habitantes > 50.000)}$. Por lo tanto, $|ciudades| > 0$\\
+
+$|ciudades| = 1 \implica \existe[unalinea]{i}{\ent}{(0 \leq i < 1) \yLuego (ciudades[i].habitantes > 50.000)}$. Como la lista tiene solo 1 elemento, ese elemento tiene que ser mayor a 50.000, por lo que el resultado también lo será.\\
+
+$|ciudades| > 1:$ llamaremos \textbf{K} a la posición particular donde el valor sea mayor a 50.000, que sabemos que tiene que existir, ya que así lo establece P. Podemos decir entonces...\\
+
+res = $\sum\limits_{i=0}^{k - 1}(ciudades[i].habitantes) + ciudades[k].habitantes + \sum\limits_{i=k+1}^{|ciudades| - 1}(ciudades[i].habitantes)$\\
+Notemos que esta igualdad es verdadera, ya que resulta de separar el valor original de res en distintas series con índices diferentes. Sabemos que, por lo que establecimos anteriormente, que ciudades[k].habitantes $>$ 50.000. Basta entonces con probar que ambas sumatorias son igual o mayores a 0 para que res $>$ 50.000.\\
+
+$k \neq 0 \wedge k \neq (|ciudades| - 1) \implica 0 \leq k - 1 < k + 1 \leq |ciudades| - 1$. \\
+
+Es decir, ambas sumatorias están en el rango de la lista. La precondición P también nos dice que...\\
+
+$\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |ciudades|) \implicaLuego (ciudades[i].habitantes \geq 0)}$\\
+
+Para toda posición dentro de la lista, se cumple que su valor es igual o mayor a 0. Como vimos que ambas sumatorias están, efectivamente, en rango de la lista, entonces cada uno de sus términos valdrá, como mínimo, 0, ¡que era la conclusión a la que queríamos llegar! Nótese lo siguiente:\\
+
+$k = 0 \implica res = \sum\limits_{i=0}^{-1}(ciudades[i].habitantes) + ciudades[0].habitantes + \sum\limits_{i=1}^{|ciudades| - 1}(ciudades[i].habitantes)$ \\
+
+La primera sumatoria, como sus índices están fuera de rango, es igual a 0. Ciudades[0].habitantes $>$ 50.000, y la otra serie será igual o mayor a 0, por lo demostrado anteriormente. La variable \textit{res} será, entonces, mayor a 50.000. Lo mismo sucede si k = $|ciduades| - 1$, solo que en ese caso, será la segunda sumatoria, cuyo índice inferior es (k + 1), la que se encontrará fuera de rango, pero el razonamiento es el mismo.\\
+
+Probamos, entonces, que dada cualquier lista que cumpla la especificación, como la implementación del programa es correcta, res $>$ 50.000.
 
 \newpage % ************** PASE TODO LO QUE YA ESTABA A OTRA PAGINA ASI NO ME MOLESTA ************** % 
 
