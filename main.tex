@@ -31,7 +31,7 @@
 %                                            EJERCICIO 1.1
 \subsection{grandesCiudades:}
 
-A partir de una lista de ciudades, devuelve aquellas que tienen más de 50.000 habitantes.\\
+A partir de una lista de ciudades, devuelve aquellas que tienen más de 50.000 habitantes.
 
 \begin{proc}{grandesCiudades}{\In ciudades : \TLista{\str\times\ent}}{\TLista{\str\times\ent}}
 	\requiere{True}
@@ -45,18 +45,18 @@ A partir de una lista de ciudades, devuelve aquellas que tienen más de 50.000 h
 
 Por cuestiones de planificación urbana, las ciudades registran sus habitantes mayores de edad por un lado y menores de edad por el otro.
 
-Dadas dos listas de ciudades del mismo largo con los mismos nombres, una con sus habitantes mayores y otra con sus habitantes menores, este procedimiento debe devolver una lista de ciudades con la cantidad total de sus habitantes.\\
+Dadas dos listas de ciudades del mismo largo con los mismos nombres, una con sus habitantes mayores y otra con sus habitantes menores, este procedimiento debe devolver una lista de ciudades con la cantidad total de sus habitantes.
 
 \begin{proc}{sumaDeHabitantes}{\In menoresDeCiudades : \TLista{\str\times\ent}, \In mayoresDeCiudades : \TLista{\str\times\ent}}{\TLista{\str\times\ent}}
 	\requiere{|menoresDeCiudades| = |mayoresDeCiudades|}
-	\requiere{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |menoresDeCiudades|) \implicaLuego (\#Apariciones(menoresDeCiudades[i]_0 , menoresDeCiudades) = \#Apariciones(menoresDeCiudades[i]_0 , mayoresDeCiudades))}}
+	\requiere{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |menoresDeCiudades|) \implicaLuego (enLaOtraEdad(menoresDeCiudades[i]_0,\\
+	 mayoresDeCiudades))}}
 	\asegura{|res| = |menoresDeCiudades|}
-	\asegura{\paraTodo[unalinea]{j}{\ent}{(0 \leq j < |res|) \implicaLuego (\#Apariciones(res[j]_0 , res) = \#Apariciones(res[j]_0 , menoresDeCiudades))}}
 	\asegura{\paraTodo[unalinea]{x,y,z}{\ent}{((0 \leq x < |res|) \land (0 \leq y < |res|) \land (0 \leq z < |res|) \yLuego (menoresDeCiudades[x]_0 = mayoresDeCiudades[y]_0 = res[z]_0)) \implicaLuego (res[z]_1 = menoresDeCiudades[x]_1 + mayoresDeCiudades[y]_1 )}}
+	\asegura{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |res|) \implicaLuego (enLaOtraEdad(res[i]_0, menoresDeCiudades))}}
 \end{proc}
 
-\aux{\#Apariciones}{ciudad : \str , ciudades : \TLista{\str\times\ent}}{\ent}{\sum\limits_{k=0}^{|ciudades| - 1} IfThenElse(ciudad = ciudades[k]_0, 1, 0)}
-
+\pred{enLaOtraEdad}{nombreCiudad : \str, listaCiudades : \TLista{\str\times\ent}}{\existe[unalinea]{j}{\ent}{(0 \leq j < |listaCiudades|)\yLuego(nombreCiudad = listaCiudades[j]_0)}}
 
 %                                            EJERCICIO 1.3
 \subsection{hayCamino:}
@@ -65,23 +65,19 @@ Un mapa de ciudades está conformada por ciudades y caminos que unen a algunas d
 A partir de este mapa, podemos definir las distancias entre ciudades como una matriz donde cada celda i, j representa la distancia entre la ciudad i y la ciudad j. Una distancia de 0 equivale a no haber camino entre i y j.
 Notar que la distancia de una ciudad hacia sí misma es cero y la distancia entre A y B es la misma que entre B y A.
 
-Dadas dos ciudades y una matriz de distancias, se pide determinar si existe un camino entre ambas ciudades.\\
+Dadas dos ciudades y una matriz de distancias, se pide determinar si existe un camino entre ambas ciudades.
 
 \begin{proc}{hayCamino}{\In distancias : \TLista{\TLista{\ent}}, \In desde : \ent, \In hasta : \ent}{\bool}
-	\requiere{0\leq desde,hasta<|distancias| \land {\paraTodo[unalinea]{i,j}{\ent}{0\leq i,j < |distancias| \implicaLuego (|distancias|=|distancias[i]| \yLuego 0\leq distancias[i][j])}}}
+	\requiere{(0\leq desde , hasta < |distancias|)}
+	\requiere{\paraTodo[unalinea]{i,j}{\ent}{(0 \leq i,j < |distancias|) \implicaLuego (|distancias| = |distancias[i]| \yLuego 0 \leq distancias[i][j])}}
 	\asegura{res = True \Leftrightarrow {\existe[unalinea]{s}{\TLista{\ent}}{esCamino(distancias, desde, hasta, s)}}}
 \end{proc}
 
+\pred{esCamino}{\In distancias : \TLista{\TLista{\ent}}, \In desde : \ent, \In hasta : \ent, \In camino : \TLista{\ent}}{(|camino| > 1) \yLuego (camino[0] = desde \land camino[|camino|-1] = hasta) \land \paraTodo[unalinea]{i}{\ent}{(0 \leq i < |camino|) \implicaLuego (0 \leq camino[i]<|distancias|) \yLuego (hayCaminoDirecto(camino[i],camino[i+1],distancias))}}
+
 \pred{hayCaminoDirecto}{c1 : \ent, c2 : \ent, distancias : \TLista{\TLista{\ent}}}{distancias[c1][c2] \neq 0}
 
-\pred{esCamino}{\In distancias : \TLista{\TLista{\ent}}, \In desde : \ent, \In hasta: \ent, \In camino:\TLista{\ent}}{|camino|>1 \yLuego camino[0]= desde \land camino[|camino|-1]=hasta \land 0\leq hasta<|camino|\land (\paraTodo[unalinea]{i}{\ent}{0\leq i<|res|-1 \implicaLuego (0\leq camino[i]<|distancias| \yLuego hayCaminoDirecto(camino[i],camino[i+1],distancias)))}}
-
-\aux{distancia}{\In distancias : \TLista{\TLista{\ent}},  \In camino:\TLista{\ent}}{\ent}{
-\begin{equation}
-\sum\limits_{k=0}^{|s|-2} distancias[camino[k]][camino[k+1]]\label{eq:1}
-\end{equation}} 
-
-
+\newpage
 %                                            EJERCICIO 1.4
 \subsection{cantidadCaminosNSaltos:}
 
@@ -92,6 +88,18 @@ En este caso, se trata de una matriz de conexión de orden 1, ya que indica cuá
 Dada la matriz de conexión de orden 1, este procedimineto debe obtener aquella de orden n que indica cuántos caminos de n saltos hay entre los distintos nodos.
 Notar que la multiplicación de una matriz de conexión de orden 1 consigo misma nos da la matriz de conexión de orden 2, y así sucesivamente.
 
+\begin{proc}{cantidadCaminosNSaltos}{\Inout conexión : \TLista{\TLista{\ent}}, \In n : \ent}{\TLista{\TLista{\ent}}}
+	\requiere{conexion = CONEXION_0}
+	\requiere{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |conexion|) \implicaLuego (|conexion| = |conexion[i]|)}}
+	\asegura{\existe[unalinea]{s}{\TLista{\TLista{\TLista{\ent}}}}{(s[0] = CONEXION_0) \yLuego (matricesConsecutivas(s)) \yLuego (conexion = s[|s| - 1])}}
+\end{proc}
+
+\pred{matricesConsecutivas}{secuenciaDeMatrices : \TLista{\TLista{\TLista{\ent}}}}{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |secuenciaDeMatrices|-1) \implicaLuego (secuenciaDeMatrices[i+1] = multipDeMatrices(s[i], s[0]))}}
+
+\pred{multipDeMatrices}{\In matriz1 : \TLista{\TLista{\ent}}, \In matriz2 \TLista{\TLista{\ent}}}{\paraTodo[unalinea]{x,y}{\ent}{(0 \leq x,y < |matriz1|) \implicaLuego (res[x][y] = fila X columna (x,y,matriz1,matriz2))}}
+
+\aux{fila X columna}{\In x : \ent, \In y : \ent, \In matriz1 : \TLista{\TLista{\ent}}, \In matriz2 \TLista{\TLista{\ent}}}{\ent}{\sum\limits_{k=0}^{|matriz1|-1} (matriz1[x][k] * matriz2[k][y])}
+
 
 %                                            EJERCICIO 1.5
 \subsection{caminoMínimo}
@@ -99,11 +107,16 @@ Dada una matriz de distancias, una ciudad de origen y una ciudad de destino, est
 En caso de no existir un camino, se debe devolver una lista vacía.
 
 \begin{proc}{caminoMinimo}{\In distancias : \TLista{\TLista{\ent}}, \In desde : \ent, \In hasta: \ent}{\TLista{\ent}}
-    \requiere{0\leq desde,hasta<|distancias| \land {\paraTodo[unalinea]{i,j}{\ent}{0\leq i,j < |distancias| \implicaLuego (|distancias|=|distancias[i]| \yLuego 0\leq distancias[i][j])}}}
-	\asegura{res="lista vacia" \Leftrightarrow \lnot  hayCamino(distancias, desde, hasta) \land (hayCamino(distancias, desde, hasta) \implicaLuego (esCamino(distancias, desde, hasta, res) \yLuego \lnot{\existe[unalinea]{s}{\TLista{\ent}}{esCamino(distancia, desde, hasta, s) \yLuego distancia(distancias, s)\leq distancia(distancias, res)}}))}
+    \requiere{0\leq desde,hasta<|distancias|}
+	\requiere{\paraTodo[unalinea]{i,j}{\ent}{0\leq i,j < |distancias| \implicaLuego (|distancias|=|distancias[i]| \yLuego 0\leq distancias[i][j]}}
+	\asegura{res=\langle \emptyset  \rangle  \Leftrightarrow \paraTodo[unalinea]{s}{\TLista{\ent}}{\lnot esCamino(distancias, desde, hasta, s)}}
+	\asegura{\paraTodo[unalinea]{s}{\TLista{\ent}}{(esCamino(distancias, desde, hasta, s)) \implicaLuego (distancia(distancias, s) \geq \\
+	 distancia(distancias, res) )}}
 \end{proc}
 
-%------------------------------------------ CAMBIO DE SECCION : demostraciones de correctidud
+\aux{distancia}{\In distancias : \TLista{\TLista{\ent}},  \In camino:\TLista{\ent}}{\ent}{\sum\limits_{k=0}^{|s|-2} distancias[camino[k]][camino[k+1]]}
+
+%------------------ CAMBIO DE SECCION : demostraciones de correctidud
 \section{Demostraciones de Correctitud}
 
 
@@ -138,20 +151,28 @@ La post condición Q es el estado que buscaremos que el programa se encuentre un
 \textbf{{Q = ${\sum\limits_{i=0}^{|ciudades| - 1}ciudades[i].habitantes}$}}
 
 Como el programa termina en el ciclo "while", es válido afirmar que la post condición del programa será la misma que la del ciclo. En otras palabras, \textbf{Q = Qc}. Es imperativo, entonces, comprobar la correctitud del ciclo, y para ello utilizaremos el Teorema del Invariante y el Teorema de Terminación.
-Veamos, en primer lugar, cuál es la precondición del ciclo. Sabemos que esta será la precondición del programa, más cualquier instrucción hasta llegar al comienzo del ciclo. Entonces, podemos decir que, como P es todas las condiciones establecidas en los \textit{requiere}, entonces Pc lo será también, sumadas las dos instrucciones antes de llegar al ciclo. Por lo tanto, \textbf{Pc = P $\wedge$ i = 0 $\wedge$ res = 0}\\
-    Proponemos, entonces, el siguiente invariante: \textbf{I = $0 \leq i \leq |ciudades| \yLuego res = \sum\limits_{j=0}^{i - 1}ciudades[j].habitantes$}. Veamos ahora si cumple las tres condiciones necesarias: \\
+
+Veamos, en primer lugar, cuál es la precondición del ciclo. Sabemos que esta será la precondición del programa, más cualquier instrucción hasta llegar al comienzo del ciclo. Entonces, podemos decir que, como P es todas las condiciones establecidas en los \textit{requiere}, entonces Pc lo será también, sumadas las dos instrucciones antes de llegar al ciclo. Por lo tanto, \textbf{Pc = P $\wedge$ i = 0 $\wedge$ res = 0}
+
+Proponemos, entonces, el siguiente invariante: \textbf{I = $0 \leq i \leq |ciudades| \yLuego res = \sum\limits_{j=0}^{i - 1}ciudades[j].habitantes$}. Veamos ahora si cumple las tres condiciones necesarias: 
+
 \begin{enumerate} \setlength\itemsep{0cm}
 	\item Pc $\implica$ I:
  
- Pc $\implica$ (i = 0 $\wedge$ res = 0) $\implica$ 0 $\leq$ 0 $\leq |ciudades| \wedge  res = \sum\limits_{j=0}^{0 - 1}ciudades[j].habitantes$ \\
+ Pc $\implica$ (i = 0 $\wedge$ res = 0) $\implica$ 0 $\leq$ 0 $\leq |ciudades| \wedge  res = \sum\limits_{j=0}^{0 - 1}ciudades[j].habitantes$ 
+
  Como la sumatoria se encuentra fuera de rango, el total es igual a 0. Se cumple, entonces, que res = 0. Verificamos que esta condición es verdadera; veamos las otras dos.\\
+
+	\item I $\wedge$  $\neg$B $\implica$ Qc:
  
-	\item I $\wedge$  $\neg$B $\implica$ Qc  \\
- 
- Llamamos B a la guarda del "while". En este caso, la guarda es $ i < ciudades.length$, por lo que la negación de B sería $i \geq |ciudades|$. Ahora que tenemos bien definido todo, veamos si esto se cumple: \\
-    I $\wedge$  $\neg$B = ($0 \leq i \leq |ciudades| \yLuego res = \sum\limits_{j=0}^{i - 1}ciudades[j].habitantes \wedge i \geq |ciudades|)$ \\
-    Si condensamos estas condiciones, es claro que... \\
-    I $\wedge$  $\neg$B $\implica$$ (i = |ciudades| \wedge res = \sum\limits_{j=0}^{i - 1}ciudades[j].habitantes) \implica res = \sum\limits_{j=0}^{|ciudades| - 1}ciudades[j].habitantes$\\
+ Llamamos B a la guarda del "while". En este caso, la guarda es $ i < ciudades.length$, por lo que la negación de B sería $i \geq |ciudades|$. Ahora que tenemos bien definido todo, veamos si esto se cumple:
+
+    I $\wedge$  $\neg$B = ($0 \leq i \leq |ciudades| \yLuego res = \sum\limits_{j=0}^{i - 1}ciudades[j].habitantes \wedge i \geq |ciudades|)$
+
+    Si condensamos estas condiciones, es claro que...
+
+    I $\wedge$  $\neg$B $\implica$$ (i = |ciudades| \wedge res = \sum\limits_{j=0}^{i - 1}ciudades[j].habitantes) \implica res = \sum\limits_{j=0}^{|ciudades| - 1}ciudades[j].habitantes$
+
     ¡Que es exactamente lo que establece Qc! Veamos la última condición.\\
     
 	\item .[I $\wedge$ B] S [I]\\
@@ -163,7 +184,7 @@ Veamos, en primer lugar, cuál es la precondición del ciclo. Sabemos que esta s
         
     wp(S, I) = wp(S1, wp(S2, I)) = wp(res = res + ciudades[i].habitantes, wp(S2, I))\\
     
-    wp(S2, I) = (i := i + 1, $0 \leq i \leq |ciudades| \yLuego res = \sum\limits_{j=0}^{i - 1}ciudades[j].habitantes$ \\
+    wp(S2, I) = (i := i + 1, $0 \leq i \leq |ciudades| \yLuego res = \sum\limits_{j=0}^{i - 1}ciudades[j].habitantes$) \\
 
     Utilizando el Axioma 1 (Asignación), reemplazaremos el valor de \textit{i} en cada una de sus apariciones libres, que en este caso, son todas:
     
@@ -257,127 +278,4 @@ $k = 0 \implica res = \sum\limits_{i=0}^{-1}(ciudades[i].habitantes) + ciudades[
 La primera sumatoria, como sus índices están fuera de rango, es igual a 0. Ciudades[0].habitantes $>$ 50.000, y la otra serie será igual o mayor a 0, por lo demostrado anteriormente. La variable \textit{res} será, entonces, mayor a 50.000. Lo mismo sucede si k = $|ciduades| - 1$, solo que en ese caso, será la segunda sumatoria, cuyo índice inferior es (k + 1), la que se encontrará fuera de rango, pero el razonamiento es el mismo.\\
 
 Probamos, entonces, que dada cualquier lista que cumpla la especificación, como la implementación del programa es correcta, res $>$ 50.000.
-
-\newpage % ************** PASE TODO LO QUE YA ESTABA A OTRA PAGINA ASI NO ME MOLESTA ************** % 
-
-
-
-\subsection{esto ya estaba}
-
-Lo principal: las fórmulas. Se puede poner en una linea, como $x_i = x_{i-1} + x_{i-2}$, o ponerse más grande:
-
-\begin{equation}
-	\sum\limits_{i=0}^{n} i
-	\label{eq:1}
-\end{equation}
-
-Y se pueden citar ecuaciones con \verb|\eqref{nombreDeEq}|: \eqref{eq:1}
-
-Ejemplo de itemizado:
-
-\begin{itemize}
-	\item Item 1
-	\item Item 2
-	\item Item 3
-\end{itemize}
-
-Ejemplo de enumerado con menor distancia entre items:
-
-\begin{enumerate} \setlength\itemsep{0cm}
-	\item Item 1
-	\item Item 2
-	\item Item 3
-\end{enumerate}
-
-Podemos escribir mucho texto. Mucho texto. Mucho texto. Mucho texto. Mucho texto. Mucho texto. Mucho texto. Mucho texto. Mucho texto. Mucho texto. Mucho texto.
-
-Otro párrafo. Otro párrafo. Otro párrafo. Otro párrafo. Otro párrafo. Otro párrafo. Otro párrafo. Otro párrafo. Otro párrafo. Otro párrafo. Otro párrafo. Otro párrafo. Otro párrafo.
-
-\vspace{0.3cm}
-
-Le agregamos una separación entre párrafos. Le agregamos una separación entre párrafos. Le agregamos una separación entre párrafos. Le agregamos una separación entre párrafos. Le agregamos una separación entre párrafos.
-
-\vspace{0.3cm}
-
-La tabla \ref{tab:ejemplo} es un ejemplo de cómo se hace una tabla.
-
-\begin{table}[h!]
-	\centering
-	\begin{tabular}{||l c c r||} 
-		\hline
-		Col1 & Col2 & Col2 & Col3 \\ [0.5ex] 
-		\hline\hline
-		1 & 6 & 87837 & 787 \\ 
-		2 & 7 & 78 & 5415 \\
-		3 & 545 & 778 & 7507 \\
-		4 & 545 & 18744 & 7560 \\
-		5 & 88 & 788 & 6344 \\
-		\hline
-	\end{tabular}
-	\caption{Ejemplo de tabla}
-	\label{tab:ejemplo}
-\end{table}
-
-
-La figura \ref{fig:subfigs} es un ejemplo de cómo se agrega una imagen.
-
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.6\textwidth]{logo_dc.jpg}
-	\caption{Ejemplo de figura}
-	\label{fig:ejemplo}
-\end{figure}
-
-\begin{figure}[ht!]
-	\begin{subfigure}{0.5\textwidth}
-		\includegraphics[width=0.5\linewidth]{LaTeX-project} 
-		\caption{Logo de LaTeX}
-		\label{fig:subfig1}
-	\end{subfigure}
-	\begin{subfigure}{0.8\textwidth}
-		\includegraphics[width=0.2\linewidth]{TeX}
-		\caption{Logo de TeX}
-		\label{fig:subfig2}
-	\end{subfigure}
-	\caption{Ejemplo para poner dos figuras juntas. Y citarlas por separado a (\subref{fig:subfig1}) y (\subref{fig:subfig2}).}
-	% OJO: el caption siempre va antes del label
-	\label{fig:subfigs}
-\end{figure}
-
-
-
-% Para hacer que quede todo en una misma linea, se puede usar minipage
-%\begin{minipage}[t]{\textwidth}
-	\begin{lstlisting}[caption={Ejemplo de código (usando los estilos de la cátedra, ver las macros para más detalles)},label=code:for]
-res := 0;
-i := 0;
-while (i < s.size()) do
-	res := res + s[i];
-	i := i + 1
-endwhile
-	\end{lstlisting}
-%\end{minipage}
-
-Si se pone un label al \verb|lstlisting|, se puede referenciar: Código \ref{code:for}.
-
-
-\subsection{Macros de la cátedra para especificar}
-
-\begin{proc}{nombre}{\In paramIn : \nat, \Inout paramInout : \TLista{\ent}}{tipoRes}
-	%    \modifica{parametro1, parametro2,..}
-	\requiere{expresionBooleana1}
-	\asegura{expresionBooleana2}
-	\aux{auxiliar1}{parametros}{tipoRes}{expresion}
-	\pred{pred1}{parametros}{expresion} 
-\end{proc}
-
-\aux{auxiliarSuelto}{parametros}{tipoRes}{expresion}
-% \paraTodo{variable}{tipo}{expresion}
-% \existe{variable}{tipo}{expresion}
-% Pueden tener [unalinea] para que no se divida en varias lineas
-\pred{predSuelto}{parametros}{\paraTodo[unalinea]{variable}{tipo}{algo \implicaLuego expresion}}
-\pred{predSuelto}{parametros}{\existe[unalinea]{variable}{tipo}{algo \yLuego expresion}}
-
-
-
 \end{document}
