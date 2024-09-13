@@ -73,7 +73,7 @@ Dadas dos ciudades y una matriz de distancias, se pide determinar si existe un c
 	\asegura{res = True \Leftrightarrow {\existe[unalinea]{s}{\TLista{\ent}}{esCamino(distancias, desde, hasta, s)}}}
 \end{proc}
 
-\pred{esCamino}{\In distancias : \TLista{\TLista{\ent}}, \In desde : \ent, \In hasta : \ent, \In camino : \TLista{\ent}}{(|camino| > 1) \yLuego (camino[0] = desde \land camino[|camino|-1] = hasta) \land \paraTodo[unalinea]{i}{\ent}{(0 \leq i < |camino|) \implicaLuego (0 \leq camino[i]<|distancias|) \yLuego (hayCaminoDirecto(camino[i],camino[i+1],distancias))}}
+\pred{esCamino}{\In distancias : \TLista{\TLista{\ent}}, \In desde : \ent, \In hasta : \ent, \In camino : \TLista{\ent}}{(|camino| > 1) \yLuego (camino[0] = desde \land camino[|camino|-1] = hasta) \land \paraTodo[unalinea]{i}{\ent}{(0 \leq i < |camino|-1) \implicaLuego ((0 \leq camino[i]<|distancias|) \yLuego (hayCaminoDirecto(camino[i],camino[i+1],distancias)))}}
 
 \pred{hayCaminoDirecto}{c1 : \ent, c2 : \ent, distancias : \TLista{\TLista{\ent}}}{distancias[c1][c2] \neq 0}
 
@@ -91,6 +91,7 @@ Notar que la multiplicación de una matriz de conexión de orden 1 consigo misma
 \begin{proc}{cantidadCaminosNSaltos}{\Inout conexión : \TLista{\TLista{\ent}}, \In n : \ent}{\TLista{\TLista{\ent}}}
 	\requiere{conexion = CONEXION_0}
 	\requiere{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |conexion|) \implicaLuego (|conexion| = |conexion[i]|)}}
+ 	\requiere{\paraTodo[unalinea]{i,j}{\ent}{(0 \leq i,j < |conexion|) \implicaLuego (0\leq conexion[i][j])}}
 	\asegura{\existe[unalinea]{s}{\TLista{\TLista{\TLista{\ent}}}}{(s[0] = CONEXION_0) \yLuego (matricesConsecutivas(s)) \yLuego (conexion = s[|s| - 1])}}
 \end{proc}
 
