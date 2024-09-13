@@ -34,7 +34,7 @@
 A partir de una lista de ciudades, devuelve aquellas que tienen más de 50.000 habitantes.
 
 \begin{proc}{grandesCiudades}{\In ciudades : \TLista{\str\times\ent}}{\TLista{\str\times\ent}}
-	\requiere{True}
+	\requiere{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |ciudades|) \implicaLuego (0\leq ciudades[i]_1)}}
 	\asegura{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |res|) \implicaLuego ((res[i] \in ciudades) \yLuego (res[i]_1 > 50.000))}}
 	\asegura{\paraTodo[unalinea]{j}{\ent}{((0 \leq j < |ciudades|) \yLuego (ciudades[j]_1 > 50.000)) \implicaLuego (ciudades[j] \in res)}}
 \end{proc}
@@ -95,11 +95,11 @@ Notar que la multiplicación de una matriz de conexión de orden 1 consigo misma
 	\asegura{\existe[unalinea]{s}{\TLista{\TLista{\TLista{\ent}}}}{(s[0] = CONEXION_0) \yLuego (matricesConsecutivas(s)) \yLuego (conexion = s[|s| - 1])}}
 \end{proc}
 
-\pred{matricesConsecutivas}{secuenciaDeMatrices : \TLista{\TLista{\TLista{\ent}}}}{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |secuenciaDeMatrices|-1) \implicaLuego (multipDeMatrices(secuenciDeMatrices[i+1], secuenciDeMatrices[i], secuenciDeMatrices[0]))}}
+\pred{matricesConsecutivas}{secuenciaDeMatrices : \TLista{\TLista{\TLista{\ent}}}}{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |secuenciaDeMatrices|-1) \implicaLuego (multipDeMatrices(secuenciaDeMatrices[i+1], secuenciaDeMatrices[i], secuenciaDeMatrices[0]))}}
 
 \pred{multipDeMatrices}{\In matriz1 : \TLista{\TLista{\ent}}, \In matriz2 \TLista{\TLista{\ent}}, \In matrizOriginal \TLista{\TLista{\ent}}}{\paraTodo[unalinea]{x,y}{\ent}{(0 \leq x,y < |matriz1|) \implicaLuego (matriz1[x][y] = fila X columna (x,y,matriz2,matrizOriginal))}}
 
-\aux{fila X columna}{\In x : \ent, \In y : \ent, \In matriz1 : \TLista{\TLista{\ent}}, \In matriz2 \TLista{\TLista{\ent}}}{\ent}{\sum\limits_{k=0}^{|matriz1|-1} (matriz1[x][k] * matriz2[k][y])}
+\aux{filaXcolumna}{\In x : \ent, \In y : \ent, \In matriz1 : \TLista{\TLista{\ent}}, \In matriz2 \TLista{\TLista{\ent}}}{\ent}{\sum\limits_{k=0}^{|matriz1|-1} (matriz1[x][k] * matriz2[k][y])}
 
 
 %                                            EJERCICIO 1.5
@@ -111,11 +111,11 @@ En caso de no existir un camino, se debe devolver una lista vacía.
     \requiere{0\leq desde,hasta<|distancias|}
 	\requiere{\paraTodo[unalinea]{i,j}{\ent}{0\leq i,j < |distancias| \implicaLuego (|distancias|=|distancias[i]| \yLuego 0\leq distancias[i][j]}}
 	\asegura{res=\langle \emptyset  \rangle  \Leftrightarrow \paraTodo[unalinea]{s}{\TLista{\ent}}{\lnot esCamino(distancias, desde, hasta, s)}}
-	\asegura{\paraTodo[unalinea]{s}{\TLista{\ent}}{(esCamino(distancias, desde, hasta, s)) \implicaLuego (distancia(distancias, s) \geq \\
+	\asegura{esCamino(distancias, desde, hasta, res) \yLuego \paraTodo[unalinea]{s}{\TLista{\ent}}{(esCamino(distancias, desde, hasta, s)) \implicaLuego (distancia(distancias, s) \geq \\
 	 distancia(distancias, res) )}}
 \end{proc}
 
-\aux{distancia}{\In distancias : \TLista{\TLista{\ent}},  \In camino:\TLista{\ent}}{\ent}{\sum\limits_{k=0}^{|s|-2} distancias[camino[k]][camino[k+1]]}
+\aux{distancia}{\In distancias : \TLista{\TLista{\ent}},  \In camino:\TLista{\ent}}{\ent}{\sum\limits_{k=0}^{|camino|-2} distancias[camino[k]][camino[k+1]]}
 
 %------------------ CAMBIO DE SECCION : demostraciones de correctidud
 \section{Demostraciones de Correctitud}
