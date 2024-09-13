@@ -94,9 +94,9 @@ Notar que la multiplicación de una matriz de conexión de orden 1 consigo misma
 	\asegura{\existe[unalinea]{s}{\TLista{\TLista{\TLista{\ent}}}}{(s[0] = CONEXION_0) \yLuego (matricesConsecutivas(s)) \yLuego (conexion = s[|s| - 1])}}
 \end{proc}
 
-\pred{matricesConsecutivas}{secuenciaDeMatrices : \TLista{\TLista{\TLista{\ent}}}}{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |secuenciaDeMatrices|-1) \implicaLuego (secuenciaDeMatrices[i+1] = multipDeMatrices(s[i], s[0]))}}
+\pred{matricesConsecutivas}{secuenciaDeMatrices : \TLista{\TLista{\TLista{\ent}}}}{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |secuenciaDeMatrices|-1) \implicaLuego (multipDeMatrices(secuenciDeMatrices[i+1], secuenciDeMatrices[i], secuenciDeMatrices[0]))}}
 
-\pred{multipDeMatrices}{\In matriz1 : \TLista{\TLista{\ent}}, \In matriz2 \TLista{\TLista{\ent}}}{\paraTodo[unalinea]{x,y}{\ent}{(0 \leq x,y < |matriz1|) \implicaLuego (res[x][y] = fila X columna (x,y,matriz1,matriz2))}}
+\pred{multipDeMatrices}{\In matriz1 : \TLista{\TLista{\ent}}, \In matriz2 \TLista{\TLista{\ent}}, \In matrizOriginal \TLista{\TLista{\ent}}}{\paraTodo[unalinea]{x,y}{\ent}{(0 \leq x,y < |matriz1|) \implicaLuego (matriz1[x][y] = fila X columna (x,y,matriz2,matrizOriginal))}}
 
 \aux{fila X columna}{\In x : \ent, \In y : \ent, \In matriz1 : \TLista{\TLista{\ent}}, \In matriz2 \TLista{\TLista{\ent}}}{\ent}{\sum\limits_{k=0}^{|matriz1|-1} (matriz1[x][k] * matriz2[k][y])}
 
