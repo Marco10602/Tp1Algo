@@ -176,7 +176,7 @@ Proponemos, entonces, el siguiente invariante: \textbf{I = $0 \leq i \leq |ciuda
 
     ¡Que es exactamente lo que establece Qc! Veamos la última condición.\\
     
-	\item .[I $\wedge$ B] S [I]\\
+	\item[3.][I $\wedge$ B] S [I]\\
  Tengo que probar que {($0 \leq i \leq |ciudades| \yLuego res = \sum\limits_{j=0}^{i - 1}ciudades[j].habitantes \wedge i < |ciudades|)  \implicaLuego$ wp(S,I)}
     
     Condensado, esto es lo mismo que decir ($0 \leq i < |ciudades| \yLuego res = \sum\limits_{j=0}^{i - 1}ciudades[j].habitantes) \implicaLuego$ wp(S, I)\\
@@ -227,7 +227,7 @@ Proponemos, entonces, el siguiente invariante: \textbf{I = $0 \leq i \leq |ciuda
 
     Que es verdadero, ya que $i = |ciudades| \implica i \geq ciudades$. Veamos la siguiente condición.\\
 
-    \item .[I $\wedge$ B $\wedge$ V0 = fv] S [fv $<$ V0]\\
+    \item[2.][I $\wedge$ B $\wedge$ V0 = fv] S [fv $<$ V0]\\
 
     $I \yLuego B \yLuego V0 = |ciudades| - i \implica$ wp(S, fv $<$ V0)\\
     
@@ -262,12 +262,12 @@ I2 = I1 $\yLuego$ ${\existe[unalinea]{j}{\ent}{(0 \leq j < |ciudades|) \yLuego (
     \paraTodo[unalinea]{j}{\ent}{(0 \leq j < |ciudades|) \implicaLuego (ciudades[j].habitantes \geq 0)}\\
 
     Para facilitar la comprensión, llamaremos únicamente a la conjunción de los nuevos predicados \textit{P2}. Por lo que I2 = I1 $\yLuego$ P2. Probemos sencillamente que este invariante sigue funcionando:\\
-
-1) Pc $\implica$ I2: \\
+\begin{enumerate} \setlength\itemsep{0cm}
+\item Pc $\implica$ I2: \\
 
 Ya vimos que Pc $\implica$ I1, por lo que faltaría ver Pc \implica P2. Pero como Pc = {(P $\wedge$ i = 0 $\wedge$ res = 0)} y P2 también está en P, está claro que Pc $\implica$ P2, y por lo tanto, Pc \implica I2.\\
 
-2) I2 $\wedge$  $\neg$B $\implica$ Qc\\
+\item I2 $\wedge$  $\neg$B $\implica$ Qc\\
 
 Probamos anteriormente que I1 $\wedge$  $\neg$B $\implica$ $res = \sum\limits_{i=0}^{|ciudades| - 1}ciudades[i].habitantes$, nos falta ver P2 \implica res $>$ 50.000. Sin embargo, podemos ver que $\neg$B no tiene absolutamente nada de relación con P2, ya que la variable en él es \textit{j}, mientras que en B es \textit{i}. Es cuestión de ver, entonces, que P2 $\implica$ res $>$ 50.000.\\
 
@@ -281,7 +281,7 @@ $|ciudades| > 1:$ una de esas posiciones tiene asociado un valor mayor a 50.000,
 
 Nótese que $|ciudades| = 0$ $\implica$ $\neg P$, por lo que no consideramos este caso.\\
 
-3) [I2 $\wedge$ B] S [I2]\\
+\item[3.] [I2 $\wedge$ B] S [I2]\\
 
 Probamos que [I1 $\wedge$ B] S [I1], por lo que habría que ver si [I2 $\wedge$ B] S [P2] es verdadera, es decir que I2 $\wedge$ B \implica wp(S, P2). Aplicando el axioma 1 dos veces, vemos que wp(S, P2) = $0 \leq i < |ciudades| \yLuego P2$. \\
 
@@ -290,4 +290,5 @@ Es decir que I1 $\wedge$ P2 $\wedge$ B \implica $0 \leq i < |ciudades| \yLuego P
 Podemos asegurar que no hace falta cambiar la función variante para asegurar la terminación del ciclo, ya que P2 con su variable \textit{j} no define cuándo terminará el ciclo, sino que será \textit{i}.
 
 Demostramos, entonces, que dada esta nueva post-condición Q y modificando el invariante que cumple con todos los requisitos para asegurar la correctitud del ciclo, el resultado obtenido será mayor a 50.000.
+\end{enumerate}
 \end{document}
