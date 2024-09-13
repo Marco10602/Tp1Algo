@@ -253,30 +253,41 @@ Proponemos, entonces, el siguiente invariante: \textbf{I = $0 \leq i \leq |ciuda
 
 2. \textbf{Demostrar que el valor devuelto es mayor a 50.000.}\\
 
-Ya hemos probado que la implementación es correcta de acuerdo a la especificación. Es decir que P $\implica$ wp(S, Q), siendo Q: res = $\sum\limits_{i=0}^{|ciudades| - 1}ciudades[i].habitantes$. Ahora, queremos demostrar que, dada cualquier lista que cumpla P, res $>$ 50.000.
-Sabemos que $\existe[unalinea]{i}{\ent}{(0 \leq i < |ciudades|) \yLuego (ciudades[i].habitantes > 50.000)}$, por lo que analizaremos distintos casos de la lista \textit{ciudades} teniendo esto en cuenta:\\
+Ya hemos probado que la implementación es correcta de acuerdo a la especificación. Sin embargo, ahora modificaremos Q para contemplar esta nueva condición. Por lo tanto...\\
+Q: res = $(\sum\limits_{i=0}^{|ciudades| - 1}ciudades[i].habitantes$ $\wedge$ $ res > 50.000) = \sum\limits_{i=0}^{|ciudades| - 1}ciudades[i].habitantes > 50.000$.\\ 
 
-$|ciudades| = 0 \implica \neg \existe[unalinea]{i}{\ent}{(0 \leq i < 0) \yLuego (ciudades[i].habitantes > 50.000)}$. Por lo tanto, $|ciudades| > 0$\\
+Veamos que modificando el invariante de forma que cumpla todas las condiciones necesarias, este nuevo estado Q se cumple. Nuestro invariante modificado (I2) será igual al enunciado en el ejercicio 2.1 (lo llamaremos I1), pero agregándole los siguientes predicados extraídos de P:\\
 
-$|ciudades| = 1 \implica \existe[unalinea]{i}{\ent}{(0 \leq i < 1) \yLuego (ciudades[i].habitantes > 50.000)}$. Como la lista tiene solo 1 elemento, ese elemento tiene que ser mayor a 50.000, por lo que el resultado también lo será.\\
+I2 = I1 $\yLuego$ ${\existe[unalinea]{j}{\ent}{(0 \leq j < |ciudades|) \yLuego (ciudades[j].habitantes > 50.000)}} $ $\wedge$\\
+    \paraTodo[unalinea]{j}{\ent}{(0 \leq j < |ciudades|) \implicaLuego (ciudades[j].habitantes \geq 0)}\\
 
-$|ciudades| > 1:$ llamaremos \textbf{K} a la posición particular donde el valor sea mayor a 50.000, que sabemos que tiene que existir, ya que así lo establece P. Podemos decir entonces...\\
+    Para facilitar la comprensión, llamaremos únicamente a la conjunción de los nuevos predicados \textit{P2}. Por lo que I2 = I1 $\yLuego$ P2. Probemos sencillamente que este invariante sigue funcionando:\\
 
-res = $\sum\limits_{i=0}^{k - 1}(ciudades[i].habitantes) + ciudades[k].habitantes + \sum\limits_{i=k+1}^{|ciudades| - 1}(ciudades[i].habitantes)$\\
+1) Pc $\implica$ I2: \\
 
-Notemos que esta igualdad es verdadera, ya que resulta de separar el valor original de res en distintas series con índices diferentes. Sabemos que, por lo que establecimos anteriormente, que ciudades[k].habitantes $>$ 50.000. Basta entonces con probar que ambas sumatorias son igual o mayores a 0 para que res $>$ 50.000.\\
+Ya vimos que Pc $\implica$ I1, por lo que faltaría ver Pc \implica P2. Pero como Pc = {(P $\wedge$ i = 0 $\wedge$ res = 0)} y P2 también está en P, está claro que Pc $\implica$ P2, y por lo tanto, Pc \implica I2.\\
 
-$k \neq 0 \wedge k \neq (|ciudades| - 1) \implica 0 \leq k - 1 < k + 1 \leq |ciudades| - 1$. \\
+2) I2 $\wedge$  $\neg$B $\implica$ Qc\\
 
-Es decir, ambas sumatorias están en el rango de la lista. La precondición P también nos dice que...\\
+Probamos anteriormente que I1 $\wedge$  $\neg$B $\implica$ $res = \sum\limits_{i=0}^{|ciudades| - 1}ciudades[i].habitantes$, nos falta ver P2 \implica res $>$ 50.000. Sin embargo, podemos ver que $\neg$B no tiene absolutamente nada de relación con P2, ya que la variable en él es \textit{j}, mientras que en B es \textit{i}. Es cuestión de ver, entonces, que P2 $\implica$ res $>$ 50.000.\\
 
-$\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |ciudades|) \implicaLuego (ciudades[i].habitantes \geq 0)}$\\
+A partir de I2, sabemos que $\existe[unalinea]{j}{\ent}{(0 \leq j < |ciudades|) \yLuego (ciudades[j].habitantes > 50.000)}$, por lo que analizaremos distintos casos de la lista \textit{ciudades} teniendo esto en cuenta:\\
 
-Para toda posición dentro de la lista, se cumple que su valor es igual o mayor a 0. Como vimos que ambas sumatorias están, efectivamente, en rango de la lista, entonces cada uno de sus términos valdrá, como mínimo, 0, ¡que era la conclusión a la que queríamos llegar! Nótese lo siguiente:\\
+$|ciudades| = 1 \implica \existe[unalinea]{j}{\ent}{(0 \leq j < 1) \yLuego (ciudades[j].habitantes > 50.000)}$. Como la lista tiene solo 1 elemento, ese elemento tiene que ser mayor a 50.000, por lo que el resultado también lo será. En este caso, I2 $\implica Qc$\\
 
-$k = 0 \implica res = \sum\limits_{i=0}^{-1}(ciudades[i].habitantes) + ciudades[0].habitantes + \sum\limits_{i=1}^{|ciudades| - 1}(ciudades[i].habitantes)$ \\
+Por I2, sabemos también que \paraTodo[unalinea]{j}{\ent}{(0 \leq j < |ciudades|) \implicaLuego (ciudades[j].habitantes \geq 0)} Con esta información...\\
 
-La primera sumatoria, como sus índices están fuera de rango, es igual a 0. Ciudades[0].habitantes $>$ 50.000, y la otra serie será igual o mayor a 0, por lo demostrado anteriormente. La variable \textit{res} será, entonces, mayor a 50.000. Lo mismo sucede si k = $|ciduades| - 1$, solo que en ese caso, será la segunda sumatoria, cuyo índice inferior es (k + 1), la que se encontrará fuera de rango, pero el razonamiento es el mismo.\\
+$|ciudades| > 1:$ una de esas posiciones tiene asociado un valor mayor a 50.000, por lo establecido por P2. Al mismo tiempo, por el predicado mencionado recientemente, podemos asegurar que todas las demás posiciones tienen un valor igual o mayor a 0. Como hay un valor mayor a 50.000, y ninguno del resto de los valores es negativo, entonces el resultado será mayor a 50.000. Entonces, por I1 habíamos probado que \textit{res} es la suma de todos los elementos de \textit{ciudades}, y con P2, probamos que dicha suma es mayor a 50.000.\\
 
-Probamos, entonces, que dada cualquier lista que cumpla la especificación, como la implementación del programa es correcta, res $>$ 50.000.
+Nótese que $|ciudades| = 0$ $\implica$ $\neg P$, por lo que no consideramos este caso.\\
+
+3) [I2 $\wedge$ B] S [I2]\\
+
+Probamos que [I1 $\wedge$ B] S [I1], por lo que habría que ver si [I2 $\wedge$ B] S [P2] es verdadera, es decir que I2 $\wedge$ B \implica wp(S, P2). Aplicando el axioma 1 dos veces, vemos que wp(S, P2) = $0 \leq i < |ciudades| \yLuego P2$. \\
+
+Es decir que I1 $\wedge$ P2 $\wedge$ B \implica $0 \leq i < |ciudades| \yLuego P2$. Como vimos anteriormente que I1 $\wedge$ B \implica $0 \leq i < |ciudades|$ y P2 \implica P2, ¡podemos ver que esto es verdadero!
+
+Podemos asegurar que no hace falta cambiar la función variante para asegurar la terminación del ciclo, ya que P2 con su variable \textit{j} no define cuándo terminará el ciclo, sino que será \textit{i}.
+
+Demostramos, entonces, que dada esta nueva post-condición Q y modificando el invariante que cumple con todos los requisitos para asegurar la correctitud del ciclo, el resultado obtenido será mayor a 50.000.
 \end{document}
