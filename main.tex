@@ -95,7 +95,7 @@ Notar que la multiplicación de una matriz de conexión de orden 1 consigo misma
 	\asegura{\existe[unalinea]{s}{\TLista{\TLista{\TLista{\ent}}}}{(s[0] = CONEXION_0) \yLuego (matricesConsecutivas(s)) \yLuego (conexion = s[|s| - 1])}}
 \end{proc}
 
-\pred{matricesConsecutivas}{secuenciaDeMatrices : \TLista{\TLista{\TLista{\ent}}}}{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |secuenciaDeMatrices|-1) \implicaLuego (multipDeMatrices(secuenciaDeMatrices[i+1], secuenciaDeMatrices[i], secuenciaDeMatrices[0]))}}
+\pred{matricesConsecutivas}{secuenciaDeMatrices : \TLista{\TLista{\TLista{\ent}}}}{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |secuenciaDeMatrices|-1) \implicaLuego (multipDeMatrices(secuenciaDeMatrices[i+1], \\ secuenciaDeMatrices[i], secuenciaDeMatrices[0]))}}
 
 \pred{multipDeMatrices}{\In matriz1 : \TLista{\TLista{\ent}}, \In matriz2 \TLista{\TLista{\ent}}, \In matrizOriginal \TLista{\TLista{\ent}}}{\paraTodo[unalinea]{x,y}{\ent}{(0 \leq x,y < |matriz1|) \implicaLuego (matriz1[x][y] = fila X columna (x,y,matriz2,matrizOriginal))}}
 
