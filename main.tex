@@ -92,7 +92,7 @@ Notar que la multiplicación de una matriz de conexión de orden 1 consigo misma
 	\requiere{conexion = CONEXION_0}
 	\requiere{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |conexion|) \implicaLuego (|conexion| = |conexion[i]|)}}
  	\requiere{\paraTodo[unalinea]{i,j}{\ent}{(0 \leq i,j < |conexion|) \implicaLuego (0\leq conexion[i][j])}}
-	\asegura{\existe[unalinea]{s}{\TLista{\TLista{\TLista{\ent}}}}{(s[0] = CONEXION_0) \yLuego (matricesConsecutivas(s)) \yLuego (conexion = s[|s| - 1])}}
+	\asegura{\existe[unalinea]{s}{\TLista{\TLista{\TLista{\ent}}}}{(|s|= n)\yLuego (s[0] = CONEXION_0) \yLuego (matricesConsecutivas(s)) \yLuego (conexion = s[|s| - 1]) \Yluego (\paraTodo[unalinea]{j}{\ent}{(0 \leq j < |s|) \implicaLuego ((\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |s[j]|) \implicaLuego (|s[j]| = |s[j][i]| = |conexion|)})}}
 \end{proc}
 
 \pred{matricesConsecutivas}{secuenciaDeMatrices : \TLista{\TLista{\TLista{\ent}}}}{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |secuenciaDeMatrices|-1) \implicaLuego (multipDeMatrices(secuenciaDeMatrices[i+1], \\ secuenciaDeMatrices[i], secuenciaDeMatrices[0]))}}
