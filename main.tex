@@ -28,35 +28,34 @@
 \section{Especificación}
 
 
-%                                            EJERCICIO 1.1
+%                                                 EJERCICIO 1.1
 \subsection{grandesCiudades:}
 
-A partir de una lista de ciudades, devuelve aquellas que tienen más de 50.000 habitantes.
+A partir de una lista de ciudades, devuelve aquellas que tienen más de 50.000 habitantes.\\
 
 \begin{proc}{grandesCiudades}{\In ciudades : \TLista{\str\times\ent}}{\TLista{\str\times\ent}}
-	\requiere{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |ciudades|) \implicaLuego (0\leq ciudades[i]_1)}}
-	\asegura{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |res|) \implicaLuego ((res[i] \in ciudades) \yLuego (res[i]_1 > 50.000))}}
-	\asegura{\paraTodo[unalinea]{j}{\ent}{((0 \leq j < |ciudades|) \yLuego (ciudades[j]_1 > 50.000)) \implicaLuego (ciudades[j] \in res)}}
+	\requiere{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |ciudades|) \implicaLuego (0\leq ciudades[i].habitantes)}}
+	\asegura{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |res|) \implicaLuego ((res[i] \in ciudades) \wedge (res[i].habitantes > 50.000))}}
+	\asegura{\paraTodo[unalinea]{j}{\ent}{((0 \leq j < |ciudades|) \yLuego (ciudades[j].habitantes > 50.000)) \implicaLuego (ciudades[j] \in res)}}
 \end{proc}
-
 
 %                                            EJERCICIO 1.2
 \subsection{sumaDeHabitantes:}
 
 Por cuestiones de planificación urbana, las ciudades registran sus habitantes mayores de edad por un lado y menores de edad por el otro.
 
-Dadas dos listas de ciudades del mismo largo con los mismos nombres, una con sus habitantes mayores y otra con sus habitantes menores, este procedimiento debe devolver una lista de ciudades con la cantidad total de sus habitantes.
+Dadas dos listas de ciudades del mismo largo con los mismos nombres, una con sus habitantes mayores y otra con sus habitantes menores, este procedimiento debe devolver una lista de ciudades con la cantidad total de sus habitantes.\\
 
 \begin{proc}{sumaDeHabitantes}{\In menoresDeCiudades : \TLista{\str\times\ent}, \In mayoresDeCiudades : \TLista{\str\times\ent}}{\TLista{\str\times\ent}}
 	\requiere{|menoresDeCiudades| = |mayoresDeCiudades|}
-	\requiere{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |menoresDeCiudades|) \implicaLuego (enLaOtraEdad(menoresDeCiudades[i]_0,\\
+	\requiere{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |menoresDeCiudades|) \implicaLuego (enLaOtraEdad(menoresDeCiudades[i].nombre,\\
 	 mayoresDeCiudades))}}
 	\asegura{|res| = |menoresDeCiudades|}
-	\asegura{\paraTodo[unalinea]{x,y,z}{\ent}{((0 \leq x < |res|) \land (0 \leq y < |res|) \land (0 \leq z < |res|) \yLuego (menoresDeCiudades[x]_0 = mayoresDeCiudades[y]_0 = res[z]_0)) \implicaLuego (res[z]_1 = menoresDeCiudades[x]_1 + mayoresDeCiudades[y]_1 )}}
-	\asegura{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |res|) \implicaLuego (enLaOtraEdad(res[i]_0, menoresDeCiudades))}}
+	\asegura{\paraTodo[unalinea]{x,y,z}{\ent}{((0 \leq x < |res|) \land (0 \leq y < |res|) \land (0 \leq z < |res|) \yLuego (menoresDeCiudades[x].nombre = mayoresDeCiudades[y].nombre = res[z].nombre)) \implicaLuego (res[z].habitantes = menoresDeCiudades[x].habitantes + mayoresDeCiudades[y].habitantes )}}
+	\asegura{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |res|) \implicaLuego (enLaOtraEdad(res[i].nombre, menoresDeCiudades))}}
 \end{proc}
 
-\pred{enLaOtraEdad}{nombreCiudad : \str, listaCiudades : \TLista{\str\times\ent}}{\existe[unalinea]{j}{\ent}{(0 \leq j < |listaCiudades|)\yLuego(nombreCiudad = listaCiudades[j]_0)}}
+\pred{enLaOtraEdad}{nombreCiudad : \str, listaCiudades : \TLista{\str\times\ent}}{\existe[unalinea]{j}{\ent}{(0 \leq j < |listaCiudades|)\yLuego(nombreCiudad = listaCiudades[j].nombre)}}
 
 %                                            EJERCICIO 1.3
 \subsection{hayCamino:}
@@ -93,7 +92,7 @@ Notar que la multiplicación de una matriz de conexión de orden 1 consigo misma
  	\requiere{1\leq n}
 	\requiere{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |conexion|) \implicaLuego (|conexion| = |conexion[i]|)}}
  	\requiere{\paraTodo[unalinea]{i,j}{\ent}{(0 \leq i,j < |conexion|) \implicaLuego (0\leq conexion[i][j])}}
-	\asegura{\existe[unalinea]{s}{\TLista{\TLista{\TLista{\ent}}}}{(|s|= n) \yLuego (\paraTodo[unalinea]{j}{\ent}{(0 \leq j < |s|) \implicaLuego (\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |s[j]|) \implicaLuego (|s[j]| = |s[j][i]| = |conexion|)})}) \yLuego (s[0] = CONEXION_0) \yLuego (matricesConsecutivas(s)) \yLuego (conexion = s[|s| - 1])}}
+	\asegura{\existe[unalinea]{s}{\TLista{\TLista{\TLista{\ent}}}}{(|s|= n) \yLuego (\paraTodo[unalinea]{j}{\ent}{(0 \leq j < |s|) \implicaLuego (\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |s[j]|) \implicaLuego (|s[j]| = |s[j][i]| = |conexion|)})}) \wedge (s[0] = CONEXION_0) \wedge (matricesConsecutivas(s)) \wedge (conexion = s[|s| - 1])}}
 \end{proc}
 
 \pred{matricesConsecutivas}{secuenciaDeMatrices : \TLista{\TLista{\TLista{\ent}}}}{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |secuenciaDeMatrices|-1) \implicaLuego (multipDeMatrices(secuenciaDeMatrices[i+1], \\ secuenciaDeMatrices[i], secuenciaDeMatrices[0]))}}
@@ -112,7 +111,7 @@ En caso de no existir un camino, se debe devolver una lista vacía.
     \requiere{0\leq desde,hasta<|distancias|}
 	\requiere{\paraTodo[unalinea]{i,j}{\ent}{0\leq i,j < |distancias| \implicaLuego (|distancias|=|distancias[i]| \yLuego 0\leq distancias[i][j]}}
 	\asegura{res=\langle \emptyset  \rangle  \Leftrightarrow \paraTodo[unalinea]{s}{\TLista{\ent}}{\lnot esCamino(distancias, desde, hasta, s)}}
-	\asegura{esCamino(distancias, desde, hasta, res) \yLuego \paraTodo[unalinea]{s}{\TLista{\ent}}{(esCamino(distancias, desde, hasta, s)) \implicaLuego (distancia(distancias, s) \geq \\
+	\asegura{esCamino(distancias, desde, hasta, res) \yLuego \paraTodo[unalinea]{s}{\TLista{\ent}}{(esCamino(distancias, desde, hasta, s)) \implicaLuego (distancia(distancias, s) \geq
 	 distancia(distancias, res) )}}
 \end{proc}
 
