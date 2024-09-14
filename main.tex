@@ -90,6 +90,7 @@ Notar que la multiplicación de una matriz de conexión de orden 1 consigo misma
 
 \begin{proc}{cantidadCaminosNSaltos}{\Inout conexión : \TLista{\TLista{\ent}}, \In n : \ent}{\TLista{\TLista{\ent}}}
 	\requiere{conexion = CONEXION_0}
+ 	\requiere{1\leq n}
 	\requiere{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |conexion|) \implicaLuego (|conexion| = |conexion[i]|)}}
  	\requiere{\paraTodo[unalinea]{i,j}{\ent}{(0 \leq i,j < |conexion|) \implicaLuego (0\leq conexion[i][j])}}
 	\asegura{\existe[unalinea]{s}{\TLista{\TLista{\TLista{\ent}}}}{(|s|= n) \yLuego (\paraTodo[unalinea]{j}{\ent}{(0 \leq j < |s|) \implicaLuego (\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |s[j]|) \implicaLuego (|s[j]| = |s[j][i]| = |conexion|)})}) \yLuego (s[0] = CONEXION_0) \yLuego (matricesConsecutivas(s)) \yLuego (conexion = s[|s| - 1])}}
